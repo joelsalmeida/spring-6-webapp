@@ -24,6 +24,14 @@ public class BootstrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        Publisher fiveStars = new Publisher();
+        fiveStars.setAddress("Z Street, 7");
+        fiveStars.setCity("Z City");
+        fiveStars.setState("Z State");
+        fiveStars.setPublisherName("Five Stars");
+        fiveStars.setZipCode(95175325);
+        Publisher fiveStarsSaved = publisherRepository.save(fiveStars);
+
         Author john = new Author();
         john.setFirstName("John");
         john.setLastName("Lord");
@@ -33,23 +41,29 @@ public class BootstrapData implements CommandLineRunner {
         grandLord.setIsbn("NXH8794");
         grandLord.setTitle("Grand Lord");
         Book grandLordSaved = bookRepository.save(grandLord);
-
         johnSaved.getBooks().add(grandLordSaved);
+        grandLordSaved.setPublisher(fiveStarsSaved);
+
+        Book grandLordTwo = new Book();
+        grandLordTwo.setIsbn("NXH3512");
+        grandLordTwo.setTitle("Grand Lord II");
+        Book grandLordTwoSaved = bookRepository.save(grandLordTwo);
+        johnSaved.getBooks().add(grandLordTwoSaved);
+        grandLordTwoSaved.setPublisher(fiveStarsSaved);
+
         authorRepository.save(johnSaved);
         bookRepository.save(grandLordSaved);
+        bookRepository.save(grandLordTwoSaved);
+        publisherRepository.save(fiveStarsSaved);
 
-        Publisher fiveStars = new Publisher();
-        fiveStars.setAddress("Z Street, 7");
-        fiveStars.setCity("Z City");
-        fiveStars.setState("Z State");
-        fiveStars.setPublisherName("Five Stars");
-        fiveStars.setZipCode(95175325);
-        Publisher fiveStarsSaved = publisherRepository.save(fiveStars);
+        System.out.println("####################");
+        System.out.println("PUBLISHER: " + publisherRepository.count());
+        System.out.println("AUTHOR: " + authorRepository.count());
+        System.out.println("BOOK : " + bookRepository.count());
 
         System.out.println("####################");
         System.out.println(johnSaved);
         System.out.println(grandLordSaved);
         System.out.println(fiveStarsSaved);
-        System.out.println("####################");
     }
 }
